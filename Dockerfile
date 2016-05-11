@@ -1,13 +1,13 @@
 FROM debian:jessie
 MAINTAINER Randy Nel Gupta <gupta@scaratec.com>
 
-ENV JAVA_VERSION 8u40
-ENV JAVA_MINOR_VERSION b25
+ENV JAVA_VERSION 8u91
+ENV JAVA_MINOR_VERSION b14
 
 ENV CATALINA_HOME /opt/tomcat
 ENV PATH $CATALINA_HOME/bin:$PATH
 ENV TOMCAT_MAJOR 8
-ENV TOMCAT_VERSION 8.0.20
+ENV TOMCAT_VERSION 8.0.33
 ENV TOMCAT_TGZ_URL https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
 
 RUN apt-get update && apt-get upgrade -q -y && \
