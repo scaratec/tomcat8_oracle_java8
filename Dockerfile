@@ -1,5 +1,11 @@
 FROM debian:jessie
 MAINTAINER Randy Nel Gupta <gupta@scaratec.com>
+ 
+ENV DEBIAN_FRONTEND noninteractive
+
+ENV LANG de_DE.UTF-8
+ENV LANGUAGE de_DE
+ENV LC_ALL C.UTF-8
 
 ENV JAVA_VERSION 8u91
 ENV JAVA_MINOR_VERSION b14
@@ -7,10 +13,11 @@ ENV JAVA_MINOR_VERSION b14
 ENV CATALINA_HOME /opt/tomcat
 ENV PATH $CATALINA_HOME/bin:$PATH
 ENV TOMCAT_MAJOR 8
-ENV TOMCAT_VERSION 8.0.33
+ENV TOMCAT_VERSION 8.0.36
 ENV TOMCAT_TGZ_URL https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
-
 RUN apt-get update && apt-get upgrade -q -y && \
+    apt-get update -qq && apt-get install -y locales -qq && locale-gen de_DE.UTF-8 de_de && dpkg-reconfigure locales && \
+    dpkg-reconfigure locales && locale-gen de_DE.UTF-8 && /usr/sbin/update-locale LANG=C.UTF-8 && \
     apt-get install -y wget curl && \
     cd /opt && \
     wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" \
@@ -27,6 +34,7 @@ RUN apt-get update && apt-get upgrade -q -y && \
                         --slave /usr/bin/javadoc javadoc ${JAVA_HOME}/bin/javadoc \
                         --slave /usr/bin/javah javah ${JAVA_HOME}/bin/javah \
                         --slave /usr/bin/javap javap ${JAVA_HOME}/bin/javap \
+                        --slave /usr/bin/keytool keytool ${JAVA_HOME}/bin/keytool \
                         --slave /usr/bin/javaws javaws ${JAVA_HOME}/bin/javaws && \
     gpg --keyserver pool.sks-keyservers.net --recv-keys \
 	05AB33110949707C93A279E3D3EFE6B686867BA6 \
@@ -48,6 +56,10 @@ RUN apt-get update && apt-get upgrade -q -y && \
 	&& tar -xvf tomcat.tar.gz --strip-components=1 \
 	&& rm bin/*.bat \
 	&& rm tomcat.tar.gz* && \
+    cd /tmp/ && \
+    wget https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem && \
+    keytool -import -noprompt -storepass changeit -trustcacerts -alias letsencryptx3crosssigned \
+    -file lets-encrypt-x3-cross-signed.pem -keystore ${JAVA_HOME}/jre/lib/security/cacerts && \
     apt-get clean && rm -rf /tmp/* /var/tmp/* 
 
 EXPOSE 8080
