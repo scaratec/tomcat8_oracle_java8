@@ -7,13 +7,13 @@ ENV LANG de_DE.UTF-8
 ENV LANGUAGE de_DE
 ENV LC_ALL C.UTF-8
 
-ENV JAVA_VERSION 8u91
+ENV JAVA_VERSION 8u111
 ENV JAVA_MINOR_VERSION b14
 
 ENV CATALINA_HOME /opt/tomcat
 ENV PATH $CATALINA_HOME/bin:$PATH
 ENV TOMCAT_MAJOR 8
-ENV TOMCAT_VERSION 8.0.36
+ENV TOMCAT_VERSION 8.5.6
 ENV TOMCAT_TGZ_URL https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
 RUN apt-get update && apt-get upgrade -q -y && \
     apt-get update -qq && apt-get install -y locales -qq && locale-gen de_DE.UTF-8 de_de && dpkg-reconfigure locales && \
